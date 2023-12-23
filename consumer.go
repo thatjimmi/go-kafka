@@ -36,7 +36,7 @@ func RunConsumer() {
 				log.Fatal(err)
 			}
 		} else {
-			// The client will automatically try to recover from all errors.
+
 			fmt.Printf("Consumer error: %v (%v)\n", err, msg)
 		}
 	}

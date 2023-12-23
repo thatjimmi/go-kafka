@@ -14,6 +14,8 @@ func main() {
 		RunProducer()
 	case "consumer":
 		RunConsumer()
+	case "websocket":
+		WebSocket()
 	default:
 		panic("Invalid argument")
 	}
