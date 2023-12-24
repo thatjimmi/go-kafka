@@ -1,12 +1,12 @@
 package main
 
 import (
-	"database/sql"
+	"context"
 	"fmt"
 	"log"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	_ "github.com/lib/pq"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 func RunConsumer() {
@@ -31,20 +31,21 @@ func RunConsumer() {
 		msg, err := c.ReadMessage(-1)
 		if err == nil {
 			fmt.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
-			_, err := db.Exec("INSERT INTO messages (message) VALUES ($1)", string(msg.Value))
-			if err != nil {
-				log.Fatal(err)
-			}
+			go func(value []byte) {
+				_, err = db.Exec(context.Background(), "INSERT INTO messages (message) VALUES ($1)", string(value))
+				if err != nil {
+					log.Printf("Error inserting message into database: %v\n", err)
+				}
+			}(msg.Value)
 		} else {
-
 			fmt.Printf("Consumer error: %v (%v)\n", err, msg)
 		}
 	}
 }
 
-func connectDB() *sql.DB {
+func connectDB() *pgxpool.Pool {
 	connStr := "postgres://myuser:mypassword@localhost:5433/mydb?sslmode=disable"
-	db, err := sql.Open("postgres", connStr)
+	db, err := pgxpool.Connect(context.Background(), connStr)
 	if err != nil {
 		log.Fatal(err)
 	}

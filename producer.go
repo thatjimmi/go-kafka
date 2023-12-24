@@ -51,6 +51,11 @@ func connectWebSocket(url string) (*websocket.Conn, error) {
 
 func processWebSocketMessages(ws *websocket.Conn, p *kafka.Producer) error {
 	topic := kafkaTopic
+	// Write message to WebSocket connection and wait for reply
+	if err := ws.WriteMessage(websocket.TextMessage, []byte("Hello from client")); err != nil {
+		return fmt.Errorf("write message: %w", err)
+	}
+
 	_, message, err := ws.ReadMessage()
 	if err != nil {
 		return fmt.Errorf("read message: %w", err)
