@@ -6,9 +6,11 @@ import (
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/gorilla/websocket"
+	protomessage "github.com/thatjimmi/go-kafka/proto"
+	"google.golang.org/protobuf/proto"
 )
 
-const (
+var (
 	websocketURL = "ws://localhost:8080/ws"
 	kafkaServer  = "localhost:9092"
 	kafkaTopic   = "myTopic"
@@ -50,25 +52,31 @@ func connectWebSocket(url string) (*websocket.Conn, error) {
 }
 
 func processWebSocketMessages(ws *websocket.Conn, p *kafka.Producer) error {
-	topic := kafkaTopic
-	// Write message to WebSocket connection and wait for reply
-	if err := ws.WriteMessage(websocket.TextMessage, []byte("Hello from client")); err != nil {
-		return fmt.Errorf("write message: %w", err)
-	}
-
 	_, message, err := ws.ReadMessage()
 	if err != nil {
 		return fmt.Errorf("read message: %w", err)
 	}
 	log.Printf("Received message: %s\n", message)
 
+	// Create new Protobuf message
+	protoMsg := &protomessage.Message{
+		Content: string(message),
+	}
+
+	// serialize message
+	serializedMsg, err := proto.Marshal(protoMsg)
+	if err != nil {
+		return fmt.Errorf("marshal message: %w", err)
+	}
+
 	err = p.Produce(&kafka.Message{
-		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
-		Value:          message,
+		TopicPartition: kafka.TopicPartition{Topic: &kafkaTopic, Partition: kafka.PartitionAny},
+		Value:          serializedMsg,
 	}, nil)
 	if err != nil {
 		return fmt.Errorf("produce message: %w", err)
 	}
+
 	return nil
 }
 

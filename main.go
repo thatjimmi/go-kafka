@@ -1,12 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"os"
 )
 
 func main() {
 	if len(os.Args) < 2 {
-		panic("Missing argument. Please specify 'producer' or 'consumer'")
+		panic("Missing argument. Must be one of: producer, consumer, websocket, metrics")
 	}
 
 	switch os.Args[1] {
@@ -15,7 +16,10 @@ func main() {
 	case "consumer":
 		RunConsumer()
 	case "websocket":
-		WebSocket()
+		RunWebSocket()
+	case "metrics":
+		// Register Prometheus metrics
+		fmt.Println("Registering Prometheus metrics")
 	default:
 		panic("Invalid argument")
 	}

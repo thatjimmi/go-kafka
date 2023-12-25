@@ -7,6 +7,8 @@ import (
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/jackc/pgx/v4/pgxpool"
+	protomessage "github.com/thatjimmi/go-kafka/proto"
+	"google.golang.org/protobuf/proto"
 )
 
 func RunConsumer() {
@@ -31,12 +33,21 @@ func RunConsumer() {
 		msg, err := c.ReadMessage(-1)
 		if err == nil {
 			fmt.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
-			go func(value []byte) {
-				_, err = db.Exec(context.Background(), "INSERT INTO messages (message) VALUES ($1)", string(value))
+
+			// Deserialize the message
+			protoMsg := &protomessage.Message{}
+			err = proto.Unmarshal(msg.Value, protoMsg)
+			if err != nil {
+				log.Printf("Error unmarshalling message: %v\n", err)
+				continue
+			}
+
+			go func(protoMsg *protomessage.Message) {
+				_, err = db.Exec(context.Background(), "INSERT INTO messages (message) VALUES ($1)", string(protoMsg.Content))
 				if err != nil {
 					log.Printf("Error inserting message into database: %v\n", err)
 				}
-			}(msg.Value)
+			}(protoMsg)
 		} else {
 			fmt.Printf("Consumer error: %v (%v)\n", err, msg)
 		}

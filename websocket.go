@@ -50,7 +50,7 @@ func handleConnections(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func WebSocket() {
+func RunWebSocket() {
 	http.HandleFunc("/ws", handleConnections)
 	log.Println("WebSocket-server kører på http://localhost:8080/ws")
 	err := http.ListenAndServe(":8080", nil)
