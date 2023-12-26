@@ -1,4 +1,4 @@
-package main
+package producer
 
 import (
 	"fmt"
@@ -6,6 +6,8 @@ import (
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/gorilla/websocket"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	protomessage "github.com/thatjimmi/go-kafka/proto"
 	"google.golang.org/protobuf/proto"
 )
@@ -14,6 +16,14 @@ var (
 	websocketURL = "ws://localhost:8080/ws"
 	kafkaServer  = "localhost:9092"
 	kafkaTopic   = "myTopic"
+)
+
+var (
+	// Example of a counter metric
+	ProducerCounter = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "producer_counter",
+		Help: "The total number of processed messages",
+	})
 )
 
 func RunProducer() {
@@ -77,6 +87,8 @@ func processWebSocketMessages(ws *websocket.Conn, p *kafka.Producer) error {
 		return fmt.Errorf("produce message: %w", err)
 	}
 
+	fmt.Println("Produced message to Kafka")
+	ProducerCounter.Inc()
 	return nil
 }
 
