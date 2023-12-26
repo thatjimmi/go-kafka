@@ -6,4 +6,5 @@ consumer:
 	go run ./cmd/consumer .
 protobuf:
 	protoc --go_out=. --go_opt=paths=source_relative ./proto/*.proto
-
+test:
+	go test -v ./...
