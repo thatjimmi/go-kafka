@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
-	protomessage "github.com/thatjimmi/go-kafka/proto"
+	protomessage "github.com/thatjimmi/go-kafka/proto/messages"
 	"google.golang.org/protobuf/proto"
 )
 

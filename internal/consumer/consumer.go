@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"log"
 
+	protomessage "github.com/thatjimmi/go-kafka/proto/messages"
+
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/jackc/pgx/v4/pgxpool"
-	protomessage "github.com/thatjimmi/go-kafka/proto"
 	"google.golang.org/protobuf/proto"
 )
 
