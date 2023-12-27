@@ -7,6 +7,8 @@ toolchain go1.21.5
 require (
 	github.com/confluentinc/confluent-kafka-go v1.9.2
 	github.com/gorilla/websocket v1.5.1
+	github.com/testcontainers/testcontainers-go/modules/compose v0.27.0
+	go.uber.org/zap v1.26.0
 )
 
 require (
@@ -132,7 +134,6 @@ require (
 	github.com/spf13/cobra v1.8.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/testify v1.8.4 // indirect
-	github.com/testcontainers/testcontainers-go/modules/compose v0.27.0 // indirect
 	github.com/theupdateframework/notary v0.7.0 // indirect
 	github.com/tilt-dev/fsnotify v1.4.8-0.20220602155310-fff9c274a375 // indirect
 	github.com/tklauser/go-sysconf v0.3.12 // indirect
@@ -155,6 +156,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.19.0 // indirect
 	go.opentelemetry.io/otel/trace v1.19.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.0.0 // indirect
+	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1 // indirect
 	golang.org/x/mod v0.11.0 // indirect
 	golang.org/x/oauth2 v0.11.0 // indirect
@@ -193,7 +195,7 @@ require (
 	github.com/jackc/pgx/v4 v4.18.1
 	github.com/jackc/puddle v1.3.0 // indirect
 	github.com/prometheus/client_golang v1.17.0
-	github.com/testcontainers/testcontainers-go v0.27.0
+	github.com/testcontainers/testcontainers-go v0.27.0 // indirect
 	golang.org/x/crypto v0.17.0 // indirect
 	golang.org/x/net v0.19.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
